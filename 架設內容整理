@@ -218,3 +218,26 @@ sudo rm -Rf dir_path
 
 
 NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
+
+
+ihakka@ihakka-MAG-H410-Codex-S-MS-B927:~$ sudo docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
+Unable to find image 'nvidia/cuda:11.0-base' locally
+11.0-base: Pulling from nvidia/cuda
+54ee1f796a1e: Pull complete 
+f7bfea53ad12: Pull complete 
+46d371e02073: Pull complete 
+b66c17bbf772: Pull complete 
+3642f1a6dfb3: Pull complete 
+e5ce55b8b4b9: Pull complete 
+155bc0332b0a: Pull complete 
+Digest: sha256:774ca3d612de15213102c2dbbba55df44dc5cf9870ca2be6c6e9c627fa63d67a
+Status: Downloaded newer image for nvidia/cuda:11.0-base
+docker: Error response from daemon: OCI runtime create failed: container_linux.go:380: starting container process caused: process_linux.go:545: container init caused: Running hook #0:: error running hook: exit status 1, stdout: , stderr: nvidia-container-cli: initialization error: nvml error: driver not loaded: unknown.
+ihakka@ihakka-MAG-H410-Codex-S-MS-B927:~$ sudo docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
+docker: Error response from daemon: OCI runtime create failed: container_linux.go:380: starting container process caused: process_linux.go:545: container init caused: Running hook #0:: error running hook: exit status 1, stdout: , stderr: nvidia-container-cli: initialization error: nvml error: driver not loaded: unknown.
+ihakka@ihakka-MAG-H410-Codex-S-MS-B927:~$ 
+
+ihakka@ihakka-MAG-H410-Codex-S-MS-B927:~$ nvidia-smi
+NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
+
+
