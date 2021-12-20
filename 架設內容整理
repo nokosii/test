@@ -215,3 +215,6 @@ sudo rm -Rf dir_path
 	1.複製、貼上操作不便 { 右鍵包含複製、貼上、執行3個動作容易在擷取文字時自動執行下一步 (貼上、執行) }
 	2.下載的檔案難以得知其位置
 	3.執行內容多時難以解讀內容 (可使用clear清除上面記錄)
+
+
+NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
