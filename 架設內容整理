@@ -1,3 +1,5 @@
+rm -rf ~/.local/share/keyrings/login.keyring
+
 目錄
 內容
 目錄	1
