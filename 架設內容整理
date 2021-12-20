@@ -240,4 +240,4 @@ ihakka@ihakka-MAG-H410-Codex-S-MS-B927:~$
 ihakka@ihakka-MAG-H410-Codex-S-MS-B927:~$ nvidia-smi
 NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
 
-
+https://gist.github.com/wangruohui/df039f0dc434d6486f5d4d098aa52d07#install-nvidia-graphics-driver-via-apt-get
