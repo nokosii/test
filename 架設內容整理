@@ -1,0 +1,217 @@
+目錄
+內容
+目錄	1
+壹、	安裝流程	2
+步驟1 安裝Ubuntu Linux 20.04 LTS作業系統	2
+步驟2 Nvidia cuda driver	2
+步驟3 安裝docker	3
+步驟4 安裝docker-compose	3
+步驟5 設定docker權限	3
+步驟6 安裝dobi	3
+步驟7 安裝nvidia-docker2	4
+步驟8 下載專案	4
+步驟9 定服務	5
+步驟10 訓練	5
+步驟11 試翻譯	5
+貳、	遇到問題	6
+問題1 使用者帳戶	6
+問題2 直接安裝Nvidia cuda driver後重開機出現	6
+問題3 更換顯示卡為GTX1650	7
+問題4 安裝dobi時出現Permission denied	7
+問題4-1 sudo無法使用	7
+問題4-2 沒有root權限	7
+問題4-3 容量不足警告	8
+問題5 訓練改了指令仍出現錯誤	8
+問題5-1 修改docker的tag	9
+問題6 想重做但專案砍不掉	9
+補充 遠端方式putty	10
+
+
+壹、	安裝流程
+步驟1 安裝Ubuntu Linux 20.04 LTS作業系統
+ <早已完成只是補充
+1.從官方網站下載ubuntu-20.04.3-desktop-amd64.iso
+https://ubuntu.com/download/desktop?version=20.04&architecture=amd64
+2.下載rufus製作開機磁碟
+https://rufus.ie/zh_TW/
+3.關閉windos的快速啟動
+電源與睡眠>其他電源設定>按下電源按鈕行為>將關機設定的開啟快速啟動取消勾選(如果不行改要按上面的變更目前無法更改項目)
+4.插著開機磁碟
+5.進入BIOS改變開機選項設定(F11)
+
+步驟2 Nvidia cuda driver
+https://developer.nvidia.com/cuda-downloads
+照著自己設備選擇然後把指令逐一複製貼上到終端
+完成後重新開機
+ 
+步驟3 安裝docker
+https://docs.docker.com/engine/install/ubuntu/
+於Install using the repository內把指令逐一複製貼上到終端
+步驟4 安裝docker-compose
+https://docs.docker.com/compose/install/
+於Install Compose中選擇Linux把指令逐一複製貼上到終端
+ 
+步驟5 設定docker權限
+sudo usermod -aG docker $USER
+這邊我也做過sudo usermod -aG docker $fox所以我不太確定是要照著打USER還是那裏要改用戶名
+步驟6 安裝dobi
+https://github.com/dnephin/dobi
+把指令複製貼上到終端，但這裡發生了錯誤詳見問題4
+ 
+步驟7 安裝nvidia-docker2 
+https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#setting-up-nvidia-container-toolkit
+於Setting up NVIDIA Container Toolkit內把指令逐一複製貼上到終端
+ 
+步驟8 下載專案
+https://github.com/i3thuan5/MeuLidFa-FanId
+輸入指令
+git clone git@github.com:i3thuan5/MeuLidFa-FanId.git
+然後找這個資料存在哪裡，這邊是存在/home/fox/ MeuLidFa-FanId
+步驟9 定服務
+1.打開檔案資料夾
+cd /home/fox/ MeuLidFa-FanId
+2.輸入指令
+docker-compose up --build
+步驟10 訓練
+輸入指令
+time dobi qionpu
+或是分別輸入
+time dobi hazoi-ngiliau
+time dobi don-ngiliau
+time dobi zunpi-ngiliau
+time dobi hiunlien
+但目前跑到最後一步hiunlien就會跳出錯誤(好像是dobi少了gpu參數)
+要改用
+docker run --rm --gpus all \
+ -v `pwd`/2-doncii-ngiliau/:/doncii-ngiliau/ \
+ -v `pwd`/3-opennmt-data/:/data/ \
+ -v `pwd`//4-opennmt-model/:/model/ \
+ opennmt-docker onmt_train -config tin.yaml
+(改用這步驟仍出現錯誤詳見問題5
+
+步驟11 試翻譯
+輸入指令
+curl -i -X POST -H "Content-Type: application/json"  \
+    -d '[
+        {"src": "我 打 籃 球 時 手 扭 傷 ， 醫 生 說 要 打 石 膏 。 ", "id": 1},
+        {"src": "黃 槿 樹 的 葉 子 ， 一 片 差 不 多 手 掌 一 般 大 。 ", "id": 1}
+    ]' \
+    "http://localhost:5000/translate"
+ 
+貳、	遇到問題
+問題1 使用者帳戶
+目前這台電腦是fox 密碼qweqwe
+
+問題2 直接安裝Nvidia cuda driver後重開機出現
+ 
+原因：顯卡過舊驅動程式不支援，原顯卡GT610 只支援至390.xx版，此版本為470.57.02
+
+解決：	1.Ctrl+Alt+F1 進入終端模式
+		2.登入
+		3.用指令刪除nvidia驅動
+sudo apt-get remove --purge nvidia*
+sudo reboot
+
+之後嘗試下載舊版驅動但只有找到display driver而非cuda driver所以沒使用
+
+問題3 更換顯示卡為GTX1650
+在網路找各種換顯卡教學影片和 查詢電腦和顯示卡本體構造
+問題4 安裝dobi時出現Permission denied
+也就是權限不足
+<<<<<絕對不能這樣做會導致嚴重錯誤>>>
+因此就找到了修改資料夾存取權限的方法
+sudo chmod -R 777 /folder
+因此認為只要改目標資料夾的權限就好了
+sudo chmod -R 777 /usr
+<<<<<絕對不能這樣做會導致嚴重錯誤>>>
+之後就能安裝dobi了，但衍伸大量問題
+問題4-1 sudo無法使用
+sudo: /usr/bin/sudo must be owned by 0 and have the setuid bit set
+權限結構毀損
+要用root權限設定
+chown root:root /usr/bin/sudo
+chmod 4755 /usr/bun/sudo
+>>然而這沒有完全解決問題詳見4-3
+  (前面少做了chmod 755 /usr -R)
+問題4-2 沒有root權限
+進入修復模式
+在開機時DELL畫面按住esc直到下面藍色條集滿後放開(不是shift)
+如果按太久會直接進入別的模式就要再次重開
+之後選 第2個選項 進階設定之類的
+之後選 第2個選項 ubuntu recoverymode
+之後選 root 開頭的選項 再按enter底下會出現
+#開頭的terminel區
+就是root權限的輸入
+問題4-3 容量不足警告
+------------網路教學沒用到但是更嚴重時能參考----------------
+cd/
+du -h -x –max-depth=1
+查看哪個空間占用過大
+---------------------------------------------------------------------------------
+查看資料占比發現是
+/var/log/cups/error_log占了200GB
+點開發現不斷重複出現某個資料夾has insecure permission
+------------網路教學沒用到但是更嚴重時能參考----------------
+如果要停止打印能
+sudo service cups stop
+---------------------------------------------------------------------------------
+之後刪除error_log
+cd /var/log/cups
+rm error*
+並再次改變權限
+cd/
+chmod 755 /usr -R
+這又會導致無法使用sudo所以要再開recoverymode
+chown root:root /usr/bin/sudo
+chmod 4755 /usr/bun/sudo
+
+問題5 訓練改了指令仍出現錯誤
+ 
+問過靖元得知是tag問題(這時候還漏掉裝cuda docker2)
+問題5-1 修改docker的tag
+指令
+docker images 
+docker tag IMAGEID REPOSITORY:TAG
+也就是docker tag 0d2995f724e3 opennmt-docker:latest
+ 
+
+
+問題6 想重做但專案砍不掉
+fatal: destination path 'MeuLidFa-FanId' already exists and is not an empty directory.
+指令
+sudo rm -Rf dir_path
+也就是sudo rm -Rf /home/fox/ MeuLidFa-FanId
+問題7查看語料準備文檔出現(END)
+輸入q退出瀏覽 
+
+
+補充 遠端方式putty
+校內網路遠端:
+	所需軟體 Putty ( 載點:https://www.putty.org/ )
+	
+	Host Name :120.105.140.44 (可儲存IP)
+	Port :22
+	Account：fox
+	SSH key 使用方式
+	Category:
+		SSH -> Auth -> Private key for authentication: ->找fox.ppk 檔案 -> 回 Session -> Open 啟動
+	login as : fox {若登入失敗重作前面步驟並在該畫面(loagin as)先用backspace鍵按幾下後再輸入}
+校外網路遠端:
+	所需軟體 Putty、ZeroTierOne ( 載點:https://www.zerotier.com/download/ )
+
+	1.ZeroTierOne 使用方式
+		Join Network -> Network ID: 3efa5cb78a1bb206
+
+	2.Putty
+	Host Name :10.147.17.11 (可儲存IP)
+	Port :22
+	Account：fox
+	SSH key 使用方式
+	Category:
+		SSH -> Auth -> Private key for authentication: ->找fox.ppk 檔案 -> 回 Session -> Open 啟動
+	login as : fox {若登入失敗重作前面步驟並在該畫面(loagin as)先用backspace鍵按幾下後再輸入}
+
+使用Putty所遇問題:
+	1.複製、貼上操作不便 { 右鍵包含複製、貼上、執行3個動作容易在擷取文字時自動執行下一步 (貼上、執行) }
+	2.下載的檔案難以得知其位置
+	3.執行內容多時難以解讀內容 (可使用clear清除上面記錄)
