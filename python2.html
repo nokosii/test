@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+  </head>
+  <body> <py-script> 
+ichin="地天澤火雷風水山"
+num1 = int(input("Enter the first three-digit number: "))
+num2 = int(input("Enter the second three-digit number: "))
+num3 = int(input("Enter the third three-digit number: "))
+
+a = num1 % 8
+b = num2 % 8
+c = num3 % 6
+
+new_string = ichin[a] + ichin[b] + str(c)
+
+print("The new string is:", new_string)
+     </py-script> </body>
+</html>
