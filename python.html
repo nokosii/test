@@ -6,16 +6,12 @@
   <body> <py-script> 
     print('易經命理程式')
     ichin="地天澤火雷風水山"
-    num1 = int(input("Enter the first three-digit number: "))
-    num2 = int(input("Enter the second three-digit number: "))
-    num3 = int(input("Enter the third three-digit number: "))
-
-    a = num1 % 8
-    b = num2 % 8
-    c = num3 % 6
-
+    import random
+    # 生成一個 0 到 7 的隨機整數
+    a = random.randint(0, 7)
+    b = random.randint(0, 7)
+    c = random.randint(0, 6)
     new_string = ichin[a] + ichin[b] + 99str(c)
-
     print("The new string is:", new_string)
      </py-script> </body>
 </html>
